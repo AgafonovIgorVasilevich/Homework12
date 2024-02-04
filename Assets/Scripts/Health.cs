@@ -1,8 +1,9 @@
+using UnityEngine.Events;
 using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField] private HealthView[] _healthViews;
+    [SerializeField] private UnityEvent<int, int> OnHealthChange;
     [SerializeField] private int _max;
 
     private int _current;
@@ -10,7 +11,7 @@ public class Health : MonoBehaviour
     private void Start()
     {
         _current = _max;
-        ShowInViews();
+        OnHealthChange?.Invoke(_current, _max);
     }
 
     public void Add(int value)
@@ -23,7 +24,7 @@ public class Health : MonoBehaviour
         else
             _current += value;
 
-        ShowInViews();
+        OnHealthChange?.Invoke(_current, _max);
     }
 
     public void Substract(int value)
@@ -36,12 +37,6 @@ public class Health : MonoBehaviour
         else
             _current -= value;
 
-        ShowInViews();
-    }
-
-    private void ShowInViews()
-    {
-        foreach (HealthView view in _healthViews)
-            view.Show(_current, _max);
+        OnHealthChange?.Invoke(_current, _max);
     }
 }
